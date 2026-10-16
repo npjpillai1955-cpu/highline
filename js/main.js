@@ -307,7 +307,7 @@ function initFormHandling() {
       }
 
       // Construct pre-filled WhatsApp link for instant speed
-      const waMessage = `Hi Highline Pest Control! 👋 I just submitted a request for pest control in Sharjah.%0A%0A*Name:* ${encodeURIComponent(leadData.name)}%0A*Phone:* ${encodeURIComponent(leadData.phone)}%0A*Service:* ${encodeURIComponent(leadData.service)}%0A*Property:* ${encodeURIComponent(leadData.property)}%0A*Area in Sharjah:* ${encodeURIComponent(leadData.area)}%0A%0APlease send quotation with 20% Google Ads discount!`;
+      const waMessage = `Hi Highline Pest Control! 👋 I just submitted a request for pest control in Sharjah.%0A%0A*Name:* ${encodeURIComponent(leadData.name)}%0A*Phone:* ${encodeURIComponent(leadData.phone)}%0A*Service:* ${encodeURIComponent(leadData.service)}%0A*Property:* ${encodeURIComponent(leadData.property)}%0A*Area in Sharjah:* ${encodeURIComponent(leadData.area)}%0A%0APlease send quotation and inspection details!`;
       const waUrl = `${WHATSAPP_BASE_URL}&text=${waMessage}`;
 
       // Open Success Modal
@@ -316,7 +316,7 @@ function initFormHandling() {
         form.reset();
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerHTML = `Get Free Quote & 20% OFF →`;
+          submitBtn.innerHTML = `Get Quote →`;
         }
       }, 700);
     });
