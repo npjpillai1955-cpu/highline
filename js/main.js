@@ -1,5 +1,6 @@
 /**
- * Highline Pest Control Sharjah - Google Ads Landing Page Scripts
+ * Highline Pest Control - Google Ads Landing Page Scripts
+ * Supports Sharjah & Dubai Campaign Pages
  * Optimized for Mobile Speed & Maximum Conversion Rate
  */
 
@@ -17,6 +18,14 @@ const CONTACT_PHONE = '+971504624543';
 const CONTACT_PHONE_DISPLAY = '050 462 4543';
 const WHATSAPP_BASE_URL = 'https://api.whatsapp.com/send?phone=971504624543';
 
+// Determine Current City (Dubai or Sharjah)
+function getActiveCity() {
+  const bodyCity = document.body.getAttribute('data-city');
+  if (bodyCity) return bodyCity;
+  if (document.title.toLowerCase().includes('dubai')) return 'Dubai';
+  return 'Sharjah';
+}
+
 /**
  * Conversion Tracking Helper
  * Fires both Google Analytics / Google Ads events and custom dataLayer events
@@ -28,18 +37,19 @@ function trackConversion(actionName, label = '') {
     event: 'conversion_event',
     conversion_action: actionName,
     conversion_label: label,
+    city: getActiveCity(),
     timestamp: new Date().toISOString()
   });
 
   // Call gtag if available
   if (typeof gtag === 'function') {
     gtag('event', actionName, {
-      event_category: 'Google Ads Landing Page',
+      event_category: `Google Ads ${getActiveCity()} Landing Page`,
       event_label: label
     });
   }
 
-  console.log(`[CRO Tracking] ${actionName}: ${label}`);
+  console.log(`[CRO Tracking] ${actionName}: ${label} (${getActiveCity()})`);
 }
 
 /**
@@ -120,7 +130,7 @@ const pestData = {
     icon: '🛡️',
     badge: 'Complete Peace of Mind',
     signs: 'Seasonal insects, silverfish, spiders, crickets, or preventative move-in / annual sanitization.',
-    approach: 'Comprehensive 360° interior & exterior perimeter defense using Sharjah Municipality approved green chemicals.',
+    approach: 'Comprehensive 360° interior & exterior perimeter defense using Municipality approved green chemicals.',
     time: '60 - 90 Minutes',
     warranty: 'Annual & Quarterly Plans Available',
     selectValue: 'general'
@@ -137,8 +147,12 @@ function initPestSelector() {
       const pestKey = btn.getAttribute('data-pest');
       if (!pestData[pestKey]) return;
 
-      buttons.forEach(b => b.classList.remove('active', 'border-blue-600', 'bg-blue-50', 'text-blue-700'));
-      btn.classList.add('active', 'border-blue-600', 'bg-blue-50', 'text-blue-700');
+      buttons.forEach(b => {
+        b.classList.remove('active', 'border-[#008B3E]', 'bg-[#eaf7ee]', 'text-[#008B3E]');
+        b.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+      });
+      btn.classList.add('active', 'border-[#008B3E]', 'bg-[#eaf7ee]', 'text-[#008B3E]');
+      btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
 
       renderPestDetails(pestKey);
     });
@@ -150,21 +164,25 @@ function renderPestDetails(key) {
   const container = document.getElementById('pest-details-content');
   if (!container || !data) return;
 
+  const city = getActiveCity();
+  const dynamicApproach = data.approach.replace('Municipality', `${city} Municipality`);
+  const pestTitle = `${data.title} in ${city}`;
+
   container.innerHTML = `
     <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-lg transition-all animate-fadeIn">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-4 border-b border-slate-100">
         <div class="flex items-center gap-3">
           <span class="text-3xl">${data.icon}</span>
           <div>
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900">${data.title}</h3>
-            <span class="inline-block px-2.5 py-0.5 mt-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900">${pestTitle}</h3>
+            <span class="inline-block px-2.5 py-0.5 mt-1 text-xs font-semibold rounded-full bg-emerald-100 text-[#008B3E]">
               ${data.badge}
             </span>
           </div>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-xs sm:text-sm font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <svg class="w-4 h-4 text-[#008B3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             ${data.time}
           </span>
         </div>
@@ -176,22 +194,22 @@ function renderPestDetails(key) {
           <p class="text-sm text-slate-700 font-medium">${data.signs}</p>
         </div>
         <div class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-100">
-          <h4 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1">Highline Approved Treatment:</h4>
-          <p class="text-sm text-slate-700 font-medium">${data.approach}</p>
+          <h4 class="text-xs font-bold text-[#008B3E] uppercase tracking-wider mb-1">Highline Approved Treatment:</h4>
+          <p class="text-sm text-slate-700 font-medium">${dynamicApproach}</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-        <div class="flex items-center gap-2 text-sm text-emerald-700 font-semibold">
-          <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+        <div class="flex items-center gap-2 text-sm text-[#008B3E] font-semibold">
+          <svg class="w-5 h-5 text-[#008B3E] shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
           ${data.warranty}
         </div>
         <div class="flex flex-wrap gap-2.5 w-full sm:w-auto">
-          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20Sharjah.%20Please%20send%20quote." target="_blank" rel="noopener" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-emerald-600/20">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-            Book via WhatsApp
+          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20${encodeURIComponent(city)}.%20Please%20send%20quote." target="_blank" rel="noopener" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#25D366]/20">
+            <img src="assets/whatsapp.svg" class="w-4 h-4 shrink-0" alt="WhatsApp">
+            <span>Book via WhatsApp</span>
           </a>
-          <button onclick="scrollToAndSelectPest('${data.selectValue}')" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-blue-600/20">
+          <button onclick="scrollToAndSelectPest('${data.selectValue}')" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#008B3E] hover:bg-[#007333] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#008B3E]/20">
             Request Quote Form
           </button>
         </div>
@@ -238,6 +256,7 @@ function initFAQAccordion() {
  */
 function initFormHandling() {
   const forms = document.querySelectorAll('.highline-lead-form');
+  const city = getActiveCity();
   
   forms.forEach(form => {
     form.addEventListener('submit', (e) => {
@@ -246,8 +265,8 @@ function initFormHandling() {
       const nameInput = form.querySelector('input[name="full_name"]');
       const phoneInput = form.querySelector('input[name="phone_number"]');
       const serviceSelect = form.querySelector('select[name="pest_service"]');
-      const propertySelect = form.querySelector('select[name="property_type"]');
-      const areaSelect = form.querySelector('select[name="sharjah_area"]');
+      const propertySelect = form.querySelector('select[name="property_type"], select[name="building_type"]');
+      const areaSelect = form.querySelector('select[name="dubai_area"], select[name="sharjah_area"], select[name="area"]');
       const submitBtn = form.querySelector('button[type="submit"]');
 
       // Validation
@@ -277,9 +296,10 @@ function initFormHandling() {
         phone: phoneInput.value.trim(),
         service: serviceSelect ? serviceSelect.value : 'Pest Control',
         property: propertySelect ? propertySelect.value : 'Residential',
-        area: areaSelect ? areaSelect.value : 'Sharjah',
+        area: areaSelect ? areaSelect.value : city,
+        city: city,
         submittedAt: new Date().toLocaleString(),
-        source: 'Google Ads Sharjah Campaign'
+        source: `Google Ads ${city} Campaign`
       };
 
       // Store in localStorage
@@ -292,7 +312,7 @@ function initFormHandling() {
       }
 
       // Track Form Submission Event
-      trackConversion('lead_form_submitted', `${leadData.service} - ${leadData.area}`);
+      trackConversion('lead_form_submitted', `${leadData.service} - ${leadData.area} (${city})`);
 
       // Disable button & show spinner
       if (submitBtn) {
@@ -307,7 +327,7 @@ function initFormHandling() {
       }
 
       // Construct pre-filled WhatsApp link for instant speed
-      const waMessage = `Hi Highline Pest Control! 👋 I just submitted a request for pest control in Sharjah.%0A%0A*Name:* ${encodeURIComponent(leadData.name)}%0A*Phone:* ${encodeURIComponent(leadData.phone)}%0A*Service:* ${encodeURIComponent(leadData.service)}%0A*Property:* ${encodeURIComponent(leadData.property)}%0A*Area in Sharjah:* ${encodeURIComponent(leadData.area)}%0A%0APlease send quotation and inspection details!`;
+      const waMessage = `Hi Highline Pest Control! 👋 I just submitted a request for pest control in ${city}.%0A%0A*Name:* ${encodeURIComponent(leadData.name)}%0A*Phone:* ${encodeURIComponent(leadData.phone)}%0A*Service:* ${encodeURIComponent(leadData.service)}%0A*Property:* ${encodeURIComponent(leadData.property)}%0A*Area in ${city}:* ${encodeURIComponent(leadData.area)}%0A%0APlease send quotation and inspection details!`;
       const waUrl = `${WHATSAPP_BASE_URL}&text=${waMessage}`;
 
       // Open Success Modal
@@ -327,6 +347,7 @@ function showSuccessModal(leadData, waUrl) {
   const modal = document.getElementById('success-modal');
   const detailsEl = document.getElementById('modal-lead-details');
   const waBtn = document.getElementById('modal-whatsapp-direct');
+  const city = leadData.city || getActiveCity();
 
   if (detailsEl) {
     detailsEl.innerHTML = `
@@ -334,7 +355,7 @@ function showSuccessModal(leadData, waUrl) {
         <div><strong>Name:</strong> ${leadData.name}</div>
         <div><strong>Phone:</strong> ${leadData.phone}</div>
         <div><strong>Service:</strong> ${leadData.service}</div>
-        <div><strong>Location:</strong> ${leadData.area}, Sharjah</div>
+        <div><strong>Location:</strong> ${leadData.area}, ${city}</div>
       </div>
     `;
   }
