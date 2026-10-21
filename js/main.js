@@ -52,7 +52,7 @@ function trackConversion(actionName, label = '') {
     });
   } else if (actionName === 'click_to_call') {
     window.dataLayer.push({
-      event: 'highline_call_click',
+      event: 'call_click',
       click_url: label,
       city: getActiveCity()
     });
@@ -84,7 +84,7 @@ function initConversionTracking() {
       if (href.startsWith('tel:')) {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
-          event: 'highline_call_click',
+          event: 'call_click',
           click_url: href,
           city: getActiveCity()
         });
