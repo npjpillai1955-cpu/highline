@@ -73,33 +73,48 @@ function trackConversion(actionName, label = '') {
  * Setup Click-to-Call & WhatsApp conversion tracking
  */
 function initConversionTracking() {
-  // Delegate tracking on document body to catch ALL dynamically created and static links reliably
+  // Delegate tracking on document body to catch ALL dynamically created and static elements reliably
   document.addEventListener('click', (e) => {
+    // Check for link clicks (Call or WhatsApp)
     const targetLink = e.target.closest('a');
-    if (!targetLink) return;
+    if (targetLink) {
+      const href = targetLink.getAttribute('href') || '';
 
-    const href = targetLink.getAttribute('href') || '';
+      // Phone clicks
+      if (href.startsWith('tel:')) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'call_click',
+          click_url: href,
+          city: getActiveCity()
+        });
+        trackConversion('click_to_call', href);
+      }
 
-    // Phone clicks
-    if (href.startsWith('tel:')) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'call_click',
-        click_url: href,
-        city: getActiveCity()
-      });
-      trackConversion('click_to_call', href);
+      // WhatsApp clicks
+      if (href.includes('whatsapp.com') || href.includes('wa.me')) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'whatsapp_click',
+          click_url: href,
+          city: getActiveCity()
+        });
+        trackConversion('click_to_whatsapp', href);
+      }
     }
 
-    // WhatsApp clicks
-    if (href.includes('whatsapp.com') || href.includes('wa.me')) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'whatsapp_click',
-        click_url: href,
-        city: getActiveCity()
-      });
-      trackConversion('click_to_whatsapp', href);
+    // Check for button clicks (Request Quote Form / Book Service)
+    const targetBtn = e.target.closest('button');
+    if (targetBtn) {
+      const onclickAttr = targetBtn.getAttribute('onclick') || '';
+      if (onclickAttr.includes('scrollToAndSelectPest')) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'form_click',
+          button_text: targetBtn.innerText.trim(),
+          city: getActiveCity()
+        });
+      }
     }
   }, { capture: true });
 }
