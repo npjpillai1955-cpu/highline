@@ -33,6 +33,8 @@ function getActiveCity() {
 function trackConversion(actionName, label = '') {
   // Push to GTM dataLayer if present
   window.dataLayer = window.dataLayer || [];
+  
+  // Standard conversion_event
   window.dataLayer.push({
     event: 'conversion_event',
     conversion_action: actionName,
@@ -40,6 +42,21 @@ function trackConversion(actionName, label = '') {
     city: getActiveCity(),
     timestamp: new Date().toISOString()
   });
+
+  // Also push dedicated action events matching custom triggers (whatsapp_click, call_click)
+  if (actionName === 'click_to_whatsapp') {
+    window.dataLayer.push({
+      event: 'whatsapp_click',
+      click_url: label,
+      city: getActiveCity()
+    });
+  } else if (actionName === 'click_to_call') {
+    window.dataLayer.push({
+      event: 'call_click',
+      click_url: label,
+      city: getActiveCity()
+    });
+  }
 
   // Call gtag if available
   if (typeof gtag === 'function') {
@@ -56,19 +73,35 @@ function trackConversion(actionName, label = '') {
  * Setup Click-to-Call & WhatsApp conversion tracking
  */
 function initConversionTracking() {
-  // Track all phone calls
-  document.querySelectorAll('a[href^="tel:"]').forEach(el => {
-    el.addEventListener('click', () => {
-      trackConversion('click_to_call', el.getAttribute('href'));
-    });
-  });
+  // Delegate tracking on document body to catch ALL dynamically created and static links reliably
+  document.addEventListener('click', (e) => {
+    const targetLink = e.target.closest('a');
+    if (!targetLink) return;
 
-  // Track all WhatsApp clicks
-  document.querySelectorAll('a[href*="whatsapp.com"], a[href*="wa.me"]').forEach(el => {
-    el.addEventListener('click', () => {
-      trackConversion('click_to_whatsapp', el.getAttribute('href'));
-    });
-  });
+    const href = targetLink.getAttribute('href') || '';
+
+    // Phone clicks
+    if (href.startsWith('tel:')) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'call_click',
+        click_url: href,
+        city: getActiveCity()
+      });
+      trackConversion('click_to_call', href);
+    }
+
+    // WhatsApp clicks
+    if (href.includes('whatsapp.com') || href.includes('wa.me')) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'whatsapp_click',
+        click_url: href,
+        city: getActiveCity()
+      });
+      trackConversion('click_to_whatsapp', href);
+    }
+  }, { capture: true });
 }
 
 /**
