@@ -1,7 +1,8 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/sharjah", "destination": "/index.html" },
-    { "source": "/dubai", "destination": "/dubai.html" }
+  "redirects": [
+    { "source": "/", "destination": "/sharjah", "permanent": true },
+    { "source": "/index", "destination": "/sharjah", "permanent": true },
+    { "source": "/index.html", "destination": "/sharjah", "permanent": true }
   ]
 }
