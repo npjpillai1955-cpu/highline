@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/sharjah", "destination": "/index.html" },
+    { "source": "/dubai", "destination": "/dubai.html" }
+  ]
+}
