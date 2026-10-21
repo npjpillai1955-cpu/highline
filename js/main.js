@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const CONTACT_PHONE = '+971504624543';
 const CONTACT_PHONE_DISPLAY = '050 462 4543';
 const WHATSAPP_BASE_URL = 'https://api.whatsapp.com/send?phone=971504624543';
+const GOOGLE_SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzxzP7w7SjvoQ7OV83eGllSWV97puwDmPIWiDuA5xQElTcKPrS1YRCt6jRdseguj3kqig/exec';
 
 // Determine Current City (Dubai or Sharjah)
 function getActiveCity() {
@@ -349,6 +350,26 @@ function initFormHandling() {
         submittedAt: new Date().toLocaleString(),
         source: `Google Ads ${city} Campaign`
       };
+
+      // Send lead asynchronously to Google Sheets
+      if (GOOGLE_SHEET_WEBAPP_URL) {
+        try {
+          fetch(GOOGLE_SHEET_WEBAPP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(leadData)
+          }).then(() => {
+            console.log('[Google Sheet] Lead recorded successfully');
+          }).catch(err => {
+            console.warn('[Google Sheet] Send error:', err);
+          });
+        } catch (e) {
+          console.warn('[Google Sheet] Fetch failed:', e);
+        }
+      }
 
       // Store in localStorage
       try {
