@@ -46,7 +46,7 @@ function trackConversion(actionName, label = '') {
   // Also push dedicated action events matching custom triggers (whatsapp_click, call_click)
   if (actionName === 'click_to_whatsapp') {
     window.dataLayer.push({
-      event: 'whatsapp_click',
+      event: 'whatsapp_clicks',
       click_url: label,
       city: getActiveCity()
     });
@@ -95,7 +95,7 @@ function initConversionTracking() {
       if (href.includes('whatsapp.com') || href.includes('wa.me')) {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
-          event: 'whatsapp_click',
+          event: 'whatsapp_clicks',
           click_url: href,
           city: getActiveCity()
         });
@@ -253,7 +253,7 @@ function renderPestDetails(key) {
           ${data.warranty}
         </div>
         <div class="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
-          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20${encodeURIComponent(city)}.%20Please%20send%20quote." target="_blank" rel="noopener" onclick="dataLayer.push({event:'whatsapp_click'})" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#25D366]/20">
+          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20${encodeURIComponent(city)}.%20Please%20send%20quote." target="_blank" rel="noopener" onclick="dataLayer.push({event:'whatsapp_clicks'})" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#25D366]/20">
             <img src="assets/whatsapp.svg" class="w-4 h-4 shrink-0" alt="WhatsApp">
             <span>Book via WhatsApp</span>
           </a>
