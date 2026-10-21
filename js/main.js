@@ -204,12 +204,12 @@ function renderPestDetails(key) {
           <svg class="w-5 h-5 text-[#008B3E] shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
           ${data.warranty}
         </div>
-        <div class="flex flex-wrap gap-2.5 w-full sm:w-auto">
-          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20${encodeURIComponent(city)}.%20Please%20send%20quote." target="_blank" rel="noopener" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#25D366]/20">
+        <div class="flex gap-2.5">
+          <a href="${WHATSAPP_BASE_URL}&text=Hi%20Highline!%20I%20need%20help%20with%20${encodeURIComponent(data.title)}%20in%20${encodeURIComponent(city)}.%20Please%20send%20quote." target="_blank" rel="noopener" onclick="dataLayer.push({event:'whatsapp_click'})" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#25D366]/20">
             <img src="assets/whatsapp.svg" class="w-4 h-4 shrink-0" alt="WhatsApp">
             <span>Book via WhatsApp</span>
           </a>
-          <button onclick="scrollToAndSelectPest('${data.selectValue}')" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#008B3E] hover:bg-[#007333] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#008B3E]/20">
+          <button onclick="dataLayer.push({event:'form_click'});scrollToAndSelectPest('${data.selectValue}')" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#F8931D] hover:bg-[#e07f12] text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-[#F8931D]/20">
             Request Quote Form
           </button>
         </div>
